@@ -44,6 +44,9 @@ android {
 
 repositories {
     mavenLocal()
+    flatDir {
+        dirs 'libs'
+    }
     maven {
         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
         url("$rootDir/../node_modules/react-native/android")
@@ -55,12 +58,12 @@ repositories {
 dependencies {
 
   if (project.gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }) {
-     implementation files('libs/ipworks3ds_sdk_9625_deploy.aar')
+     implementation(name:'ipworks3ds_sdk_9625_deploy', ext:'aar')
   }
   else {
-     implementation files('libs/ipworks3ds_sdk_9625.aar')
+     implementation(name:'ipworks3ds_sdk_9625', ext:'aar')
   }
-  implementation files('libs/oppwa.mobile-7.11.0-release.aar')
+  implementation(name:'oppwa.mobile-7.11.0-release', ext:'aar')
   implementation "androidx.appcompat:appcompat:1.7.0"
   implementation "androidx.recyclerview:recyclerview:1.4.0"
   implementation "androidx.browser:browser:1.8.0"
