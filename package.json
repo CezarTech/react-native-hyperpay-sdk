@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "react-native.config.js",
     "react-native-hyperpay-sdk.podspec",
     "OPPWAMobile.xcframework",
     "ipworks3ds_sdk.xcframework",
