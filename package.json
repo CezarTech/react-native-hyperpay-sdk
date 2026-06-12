@@ -15,7 +15,7 @@
     "cpp",
     "react-native-hyperpay-sdk.podspec",
     "OPPWAMobile.xcframework",
-    "ipworks3ds_sdk_9625.xcframework",
+    "ipworks3ds_sdk.xcframework",
     "ipworks3ds_sdk_deploy_9625.xcframework",
     "!lib/typescript/example",
     "!android/build",
