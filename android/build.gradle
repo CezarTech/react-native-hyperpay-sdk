@@ -18,6 +18,7 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
+    namespace "com.reactnativehyperpay"
     compileSdkVersion safeExtGet('HyperPay_compileSdkVersion', 35)
     defaultConfig {
         minSdkVersion safeExtGet('HyperPay_minSdkVersion', 24)
