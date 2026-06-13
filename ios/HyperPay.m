@@ -120,26 +120,28 @@ RCT_EXPORT_METHOD(applePay:(NSDictionary*)params resolver:(RCTPromiseResolveBloc
                                                                                         checkoutID:[params valueForKey:@"checkoutID"]
                                                                                           settings:checkoutSettings];
 
-  [checkoutProvider presentCheckoutWithPaymentBrand:@"APPLEPAY"
-    loadingHandler:^(BOOL inProgress) {
-      [self sendEventWithName:@"onProgress" body:@(inProgress)];
-      // Executed whenever SDK sends request to the server or receives the response.
-      // You can start or stop loading animation based on inProgress parameter.
-  } completionHandler:^(OPPTransaction * _Nullable transaction, NSError * _Nullable error) {
-      if (error) {
-//          reject(@"applePay",checkoutID,error);
-        reject(@"applePay",error.localizedDescription, error);
-          // See code attribute (OPPErrorCode) and NSLocalizedDescription to identify the reason of failure.
-      } else {
-          if (transaction.redirectURL)
-              resolve(@{@"redirectURL": transaction.redirectURL.absoluteString});
-          else
-              resolve(@{@"resourcePath": transaction.resourcePath});
-      }
-  } cancelHandler:^{
-       reject(@"applePay",@"cancel",NULL);
-      // Executed if the shopper closes the payment page prematurely.
-  }];
+  // v7.x SDK requires presentCheckoutWithPaymentBrand to be called on the main thread.
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [checkoutProvider presentCheckoutWithPaymentBrand:@"APPLEPAY"
+      loadingHandler:^(BOOL inProgress) {
+        [self sendEventWithName:@"onProgress" body:@(inProgress)];
+        // Executed whenever SDK sends request to the server or receives the response.
+        // You can start or stop loading animation based on inProgress parameter.
+    } completionHandler:^(OPPTransaction * _Nullable transaction, NSError * _Nullable error) {
+        if (error) {
+          reject(@"applePay",error.localizedDescription, error);
+            // See code attribute (OPPErrorCode) and NSLocalizedDescription to identify the reason of failure.
+        } else {
+            if (transaction.redirectURL)
+                resolve(@{@"redirectURL": transaction.redirectURL.absoluteString});
+            else
+                resolve(@{@"resourcePath": transaction.resourcePath});
+        }
+    } cancelHandler:^{
+         reject(@"applePay",@"cancel",NULL);
+        // Executed if the shopper closes the payment page prematurely.
+    }];
+  });
 
 }
 
