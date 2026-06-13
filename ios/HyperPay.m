@@ -6,6 +6,7 @@
 @implementation HyperPay
 
 OPPPaymentProvider *provider;
+OPPCheckoutProvider *checkoutProvider;
 NSString *shopperResultURL = @"";
 NSString *merchantIdentifier = @"";
 NSString *countryCode = @"";
@@ -116,9 +117,10 @@ RCT_EXPORT_METHOD(applePay:(NSDictionary*)params resolver:(RCTPromiseResolveBloc
     
   checkoutSettings.shopperResultURL=shopperResultURL;
   checkoutSettings.applePayPaymentRequest = paymentRequest;
-  OPPCheckoutProvider *checkoutProvider = [OPPCheckoutProvider checkoutProviderWithPaymentProvider:provider
-                                                                                        checkoutID:[params valueForKey:@"checkoutID"]
-                                                                                          settings:checkoutSettings];
+  // Assign to class-level variable so ARC retains it across the dispatch_async boundary.
+  checkoutProvider = [OPPCheckoutProvider checkoutProviderWithPaymentProvider:provider
+                                                                   checkoutID:[params valueForKey:@"checkoutID"]
+                                                                     settings:checkoutSettings];
 
   // v7.x SDK requires presentCheckoutWithPaymentBrand to be called on the main thread.
   dispatch_async(dispatch_get_main_queue(), ^{
